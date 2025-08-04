@@ -17,7 +17,7 @@ const RepositoryList = () => {
   const fetchRepositories = async () => {
     try {
       // Replace the IP address with your local server's IP
-      const response = await fetch('http://192.168.1.33:5000/api/repositories');
+      const response = await fetch('http://127.0.0.1:5000/api/repositories');
       const json = await response.json();
       console.log(json);
       setRepositories(json);
