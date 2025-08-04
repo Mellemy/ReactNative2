@@ -12,26 +12,27 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const [repositories, setRepositories] = useState(null);
+  const [repositories, setRepositories] = useState();
 
   const fetchRepositories = async () => {
-    try {
-      // Replace the IP address with your local server's IP
-      const response = await fetch('http://127.0.0.1:5000/api/repositories');
-      const json = await response.json();
-      console.log(json);
-      setRepositories(json);
-    } catch (error) {
-      console.error('Failed to fetch repositories:', error);
-    }
+    // Replace the IP address part with your own IP address!
+    const response = await fetch('http://192.168.1.33:5000/api/repositories');
+    const json = await response.json();
+
+    console.log(json);
+
+    setRepositories(json);
   };
 
   useEffect(() => {
     fetchRepositories();
   }, []);
 
-  // Safely extract repository nodes
-  const repositoryNodes = repositories?.edges?.map(edge => edge.node) || [];
+  // Get the nodes from the edges array
+  const repositoryNodes = repositories
+    ? repositories.edges.map(edge => edge.node)
+    : [];
+
   return (
     <FlatList
       data={repositoryNodes}
