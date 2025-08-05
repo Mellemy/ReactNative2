@@ -1,4 +1,5 @@
 import { useMutation, gql } from '@apollo/client';
+import useAuthStorage from '../hooks/useAuthStorage';
 
 const AUTHENTICATE = gql`
   mutation Authenticate($credentials: AuthenticateInput!) {
@@ -10,6 +11,7 @@ const AUTHENTICATE = gql`
 
 const useSignIn = () => {
   const [mutate, result] = useMutation(AUTHENTICATE);
+  const authStorage = useAuthStorage();
 
   const signIn = async ({ username, password }) => {
     const response = await mutate({
