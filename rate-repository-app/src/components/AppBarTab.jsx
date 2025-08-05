@@ -8,8 +8,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppBarTab = ({ title, to  }) => {
-  return (
+const AppBarTab = ({ title, to, onPress }) => {
+  if (onPress) {
+    return (
+      <Pressable onPress={onPress} style={styles.tab}>
+        <Text color="primary" fontWeight="bold" fontSize="heading">
+          {title}
+        </Text>
+      </Pressable>
+    );
+  }
+ return (
     <Link to={to} style={styles.tab}>
       <Text color="primary" fontWeight="bold" fontSize="heading">
         {title}
