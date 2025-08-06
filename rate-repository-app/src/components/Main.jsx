@@ -5,7 +5,7 @@ import AppBar from './AppBar';
 import { Route, Routes, Navigate } from 'react-router-native';
 import SignIn from './SignIn';
 import OneRepository from './OneRepository';
-
+import ReviewForm from './ReviewForm';
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -21,6 +21,7 @@ const Main = () => {
         <Route path="/" element={<RepositoryList />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/repository/:id" element={<OneRepository />} />
+        <Route path="/create-review" element={<ReviewForm />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </View>
