@@ -1,68 +1,16 @@
-import { useState, useEffect } from 'react';
-import { FlatList, View, StyleSheet } from 'react-native';
-import RepositoryItem from './RepositoryItem';
-import useRepositories from '../hooks/useRepositories';
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import { useNavigate } from 'react-router-native';
-import { Menu, Button, Provider as PaperProvider } from 'react-native-paper';
-
-const styles = StyleSheet.create({
-  separator: {
-    height: 10,
-  },
-  menuContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    },
-
-   sortButtonLabel: {
-    fontSize: 15,
-    color: '#f9a60dff', 
-    fontWeight: 'bold',
-  },
-});
-
-
-
-const ItemSeparator = () => <View style={styles.separator} />;
-
-const RepositoryListHeader = ({ selectedSort, setSelectedSort }) => {
-  const [visible, setVisible] = useState(false);
-
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
-
-  const handleSelect = (option) => {
-    setSelectedSort(option);
-    closeMenu();
-  };
-
-  return (
-    <View style={styles.menuContainer}>
-      <Menu
-        visible={visible}
-        onDismiss={closeMenu}
-        anchor={
-        <Button
-            onPress={openMenu}
-            labelStyle={styles.sortButtonLabel}
-
-          >
-         Sort by
-        </Button>
-        }
-      >
-        <Menu.Item onPress={() => handleSelect('latest')} title="Latest repositories" />
-        <Menu.Item onPress={() => handleSelect('highest')} title="Highest rated repositories" />
-        <Menu.Item onPress={() => handleSelect('lowest')} title="Lowest rated repositories" />
-      </Menu>
-    </View>
-  );
-};
+import useRepositories from '../hooks/useRepositories';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { RepositoryListContainer } from './RepositoryListContainer';
 
 const RepositoryList = () => {
+  const navigate = useNavigate();
+
   const [selectedSort, setSelectedSort] = useState('latest');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [debouncedSearchKeyword] = useDebounce(searchKeyword, 500);
 
   const getSortVariables = () => {
     switch (selectedSort) {
@@ -78,32 +26,22 @@ const RepositoryList = () => {
 
   const sortVariables = getSortVariables();
 
-  const { repositories } = useRepositories(sortVariables);
-  const navigate = useNavigate();
+  const { repositories } = useRepositories({
+    ...sortVariables,
+    searchKeyword: debouncedSearchKeyword,
+  });
 
-  // Get the nodes from the edges array
-  const repositoryNodes = repositories
-    ? repositories.edges.map(edge => edge.node)
-    : [];
+  const handleRepositoryPress = (id) => {
+    navigate(`/repository/${id}`);
+  };
 
-  return (
-     <PaperProvider>
-     <FlatList
-        data={repositoryNodes}
-        ItemSeparatorComponent={ItemSeparator}
-        ListHeaderComponent={
-          <RepositoryListHeader
-            selectedSort={selectedSort}
-            setSelectedSort={setSelectedSort}
-          />
-        }
-        renderItem={({ item }) => (
-          <RepositoryItem
-            item={item}
-            onPress={() => navigate(`/repository/${item.id}`)}
-          />
-        )}
-        keyExtractor={(item) => item.id}
+ return (
+    <PaperProvider>
+      <RepositoryListContainer
+        repositories={repositories}
+        onSortChange={setSelectedSort}
+        onSearchChange={setSearchKeyword}
+        onRepositoryPress={handleRepositoryPress}
       />
     </PaperProvider>
   );
