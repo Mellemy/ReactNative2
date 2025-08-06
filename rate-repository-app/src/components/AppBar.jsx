@@ -44,18 +44,24 @@ const AppBar = () => {
 
    
   {isAuthenticated && (
+     <>
   <AppBarTab title="Create a review" to="/create-review" />
+  <AppBarTab title="My reviews" to="/my-reviews" />
+  </>
   )}
 
   {!isAuthenticated && (
    <>
+  
   <AppBarTab title="Sign in" to="/signin" />
   <AppBarTab title="Sign up" to="/signup" />
+  
   </>
     )}
 
   {isAuthenticated && (
   <AppBarTab title="Sign out" onPress={handleSignOut} />
+  
  )}
 </ScrollView>
 </View>
