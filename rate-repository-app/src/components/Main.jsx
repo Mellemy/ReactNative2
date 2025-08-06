@@ -4,6 +4,8 @@ import RepositoryList from './RepositoryList';
 import AppBar from './AppBar';
 import { Route, Routes, Navigate } from 'react-router-native';
 import SignIn from './SignIn';
+import OneRepository from './OneRepository';
+
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -14,10 +16,11 @@ const styles = StyleSheet.create({
 const Main = () => {
   return (
     <View style={styles.container}>
-         <AppBar />
+      <AppBar />
        <Routes>
         <Route path="/" element={<RepositoryList />} />
-         <Route path="/signin" element={<SignIn />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/repository/:id" element={<OneRepository />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </View>
